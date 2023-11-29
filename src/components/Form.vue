@@ -20,7 +20,7 @@
 </template>
 <script setup>
 import {ref, defineEmits, defineProps, onMounted} from 'vue'
-import {addToStorage, getOne, updateStorage} from "@/services/storage";
+import {addToStorage, getAll, getOne, updateStorage} from "@/services/storage";
 
 const {type, email} = defineProps(['type', 'email']);
 const emit = defineEmits(['handleSubmit', 'handleCancel'])
@@ -72,25 +72,53 @@ const validateForm = () => {
     isValid = false;
   }
 
-  const customer = getOne(form.value.email);
+  const customer = getOne(type === 'update' ? email : form.value.email);
+  const customers = getAll();
+
+  const checkFirstNameDuplicate = () => {
+    if (customers.some(custom => custom.firstName === form.value.firstName)) {
+      alert("First Name is duplicated!")
+      isValid = false;
+    }
+  }
+  const checkLastNameDuplicate = () => {
+    if (customers.some(custom => custom.lastName === form.value.lastName)) {
+      alert("Last Name is duplicated!")
+      isValid = false;
+    }
+  }
+  const checkDateOfBirthDuplicate = () => {
+    if (customers.some(custom => custom.dateOfBirth === form.value.dateOfBirth)) {
+      alert("Date of Birth is duplicated!")
+      isValid = false;
+    }
+  }
 
   // Validate email
-  if (customer && customer.email !== form.value.email) {
-    alert("Email is duplicated!")
-    isValid = false;
-  }
+  if (type === 'create') {
+    if (customer) {
+      alert("Email is duplicated!")
+      isValid = false;
+    }
 
-  if (customer && customer.firstName === form.value.firstName) {
-    alert("First Name is duplicated!")
-    isValid = false;
-  }
-  if (customer && customer.lastName === form.value.lastName) {
-    alert("Last Name is duplicated!")
-    isValid = false;
-  }
-  if (customer && customer.DateOfBirth === form.value.DateOfBirth) {
-    alert("Date of Birth is duplicated!")
-    isValid = false;
+    checkFirstNameDuplicate()
+    checkLastNameDuplicate()
+    checkDateOfBirthDuplicate()
+
+  } else {
+    if (email !== form.value.email && customer.email === form.value.email) {
+      alert("Email is duplicated!")
+      isValid = false;
+    }
+    if (customer.firstName !== form.value.firstName) {
+      checkFirstNameDuplicate()
+    }
+    if (customer.lastName !== form.value.lastName) {
+      checkLastNameDuplicate()
+    }
+    if (customer.dateOfBirth !== form.value.dateOfBirth) {
+      checkDateOfBirthDuplicate()
+    }
   }
 
   return isValid
@@ -105,7 +133,7 @@ const handleSubmitForm = e => {
       emit('handleSubmit')
     }
     if (type === 'update') {
-      updateStorage(form);
+      updateStorage(form.value);
       alert('Customer updated successfully.')
       emit('handleSubmit')
     }
