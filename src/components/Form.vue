@@ -70,8 +70,8 @@ const validateForm = () => {
     alert("Last Name is duplicated!")
     isValid = false;
   }
-  if (customer && customer.bankAccountNumber === form.value.bankAccountNumber) {
-    alert("Account Number is duplicated!")
+  if (customer && customer.DateOfBirth === form.value.DateOfBirth) {
+    alert("Date of Birth is duplicated!")
     isValid = false;
   }
 
