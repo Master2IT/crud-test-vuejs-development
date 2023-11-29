@@ -1,26 +1,27 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="p-5">
+    <div v-if="type === 'list'">
+      <button class="bg-blue-500 text-white p-2 rounded" @click="type = 'form'">Create a new Customer</button>
+      <Customers/>
+    </div>
+    <Form v-else-if="type === 'form'" type="Create" @handleSubmit="handleSubmit"/>
+  </div>
 </template>
 
-<script>
-import HelloWorld from './components/HelloWorld.vue'
+<script setup>
+import Customers from "@/components/Customers.vue";
+import {ref} from "vue";
+import Form from "@/components/Form.vue";
 
-export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
+const type = ref('form')
 </script>
 
 <style>
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
 }
 </style>
