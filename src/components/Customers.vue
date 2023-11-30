@@ -1,5 +1,5 @@
 <template>
-  <table class="my-5 border border-collapse w-full">
+  <table class="my-5 border border-collapse w-full table">
     <thead>
     <tr>
       <th class="border text-sm p-3">First Name</th>
@@ -20,9 +20,11 @@
       <td class="border text-center text-sm p-5">{{ customer.email }}</td>
       <td class="border text-center text-sm p-5">{{ customer.bankAccountNumber }}</td>
       <td class="border text-center text-sm p-5 flex gap-2">
-        <button class="p-2 rounded bg-gray-500 text-white" @click="()=> emit('handleEdit', customer.email)">Update
+        <button class="p-2 rounded bg-gray-500 text-white" data-test-update-customer
+                @click="()=> emit('handleEdit', customer.email)">Update
         </button>
-        <button class="p-2 rounded bg-red-500 text-white" @click="()=> handleRemoveCustomer(customer.email)">Remove
+        <button class="p-2 rounded bg-red-500 text-white" data-test-delete-customer
+                @click="()=> handleRemoveCustomer(customer.email)">Remove
         </button>
       </td>
     </tr>

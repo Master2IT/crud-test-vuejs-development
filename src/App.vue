@@ -1,7 +1,7 @@
 <template>
   <div class="p-5">
     <div v-if="type === 'list'">
-      <button class="bg-blue-500 text-white p-2 rounded" @click="()=> {
+      <button class="bg-blue-500 text-white p-2 rounded" data-test-create-customer @click="()=> {
         type = 'form';
         formType = 'create'
       }">Create a new Customer

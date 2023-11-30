@@ -25,5 +25,5 @@ export const getOne = (email) => {
     return storage.find(item => item.email === email) || null
 }
 export const getAll = () => {
-    return JSON.parse(window.localStorage.getItem(key)).reverse() || []
+    return JSON.parse(window.localStorage.getItem(key))?.reverse() || []
 }

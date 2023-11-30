@@ -1,19 +1,22 @@
 <template>
-  <form class="form flex flex-col gap-5" @submit="handleSubmitForm">
+  <form id="form" class="form flex flex-col gap-5" @submit="handleSubmitForm">
     <h1><span class="capitalize">{{ type }}</span> Customer</h1>
-    <input v-model="form.firstName" class="p-3 w-full border rounded" placeholder="First Name"
+    <input id="first-name" v-model="form.firstName" class="p-3 w-full border rounded" placeholder="First Name"
            type="text"/>
-    <input v-model="form.lastName" class="p-3 w-full border rounded" placeholder="Last Name" type="text"/>
-    <input v-model="form.dateOfBirth" class="p-3 w-full border rounded" placeholder="Date of Birth"
+    <input id="last-name" v-model="form.lastName" class="p-3 w-full border rounded" placeholder="Last Name"
+           type="text"/>
+    <input id="date-of-birth" v-model="form.dateOfBirth" class="p-3 w-full border rounded" placeholder="Date of Birth"
            type="date"/>
-    <input v-model="form.phoneNumber" class="p-3 w-full border rounded" placeholder="Phone Number"
+    <input id="phone-number" v-model="form.phoneNumber" class="p-3 w-full border rounded" placeholder="Phone Number"
            type="text"/>
-    <input v-model="form.email" class="p-3 w-full border rounded" placeholder="Email" type="text"/>
-    <input v-model="form.bankAccountNumber" class="p-3 w-full border rounded"
+    <input id="email" v-model="form.email" class="p-3 w-full border rounded" placeholder="Email" type="text"/>
+    <input id="bank-account-number" v-model="form.bankAccountNumber" class="p-3 w-full border rounded"
            placeholder="Bank Account Number"
            type="text"/>
     <div class="flex gap-2 justify-end">
-      <button class="p-2 rounded bg-gray-500 text-white" type="button" @click="emit('handleCancel')">Cancel</button>
+      <button class="p-2 rounded bg-gray-500 text-white" data-form-cancel-test type="button"
+              @click="emit('handleCancel')">Cancel
+      </button>
       <button class="p-2 px-10 rounded bg-blue-500 text-white">Submit</button>
     </div>
   </form>
@@ -60,6 +63,8 @@ const validateForm = () => {
       !form.value.bankAccountNumber) {
     alert("All fields are required!")
     isValid = false;
+
+    return isValid
   }
   if (!form.value.email.toLowerCase()
       .match(
@@ -84,7 +89,7 @@ const validateForm = () => {
   const customers = getAll();
 
   const checkDuplicates = () => {
-    if (customers.some(custom => custom.dateOfBirth.toLowerCase() === form.value.dateOfBirth.toLowerCase()) &&
+    if (customers.some(custom => custom.dateOfBirth === form.value.dateOfBirth) &&
         customers.some(custom => custom.lastName.toLowerCase() === form.value.lastName.toLowerCase()) &&
         customers.some(custom => custom.firstName.toLowerCase() === form.value.firstName.toLowerCase())) {
       alert("Firstname, Lastname and Date of Birth are duplicated!")
