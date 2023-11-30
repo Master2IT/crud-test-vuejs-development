@@ -5,7 +5,7 @@
            type="text"/>
     <input v-model="form.lastName" class="p-3 w-full border rounded" placeholder="Last Name" type="text"/>
     <input v-model="form.dateOfBirth" class="p-3 w-full border rounded" placeholder="Date of Birth"
-           type="text"/>
+           type="date"/>
     <input v-model="form.phoneNumber" class="p-3 w-full border rounded" placeholder="Phone Number"
            type="text"/>
     <input v-model="form.email" class="p-3 w-full border rounded" placeholder="Email" type="text"/>
@@ -21,6 +21,7 @@
 <script setup>
 import {ref, defineEmits, defineProps, onMounted} from 'vue'
 import {addToStorage, getAll, getOne, updateStorage} from "@/services/storage";
+import parsePhoneNumber from 'libphonenumber-js'
 
 const {type, email} = defineProps(['type', 'email']);
 const emit = defineEmits(['handleSubmit', 'handleCancel'])
@@ -67,6 +68,13 @@ const validateForm = () => {
     alert('Email is not valid!')
     isValid = false;
   }
+  if (form.value.phoneNumber) {
+    if (!parsePhoneNumber(form.value.phoneNumber)?.isValid()) {
+      alert("Phone Number is not valid!")
+      isValid = false;
+    }
+  }
+
   if (!form.value.bankAccountNumber.toLowerCase().match(/^([0-9]{11})|([0-9]{2}-[0-9]{3}-[0-9]{6})$/)) {
     alert("Account number is not valid!")
     isValid = false;
@@ -75,21 +83,11 @@ const validateForm = () => {
   const customer = getOne(type === 'update' ? email : form.value.email);
   const customers = getAll();
 
-  const checkFirstNameDuplicate = () => {
-    if (customers.some(custom => custom.firstName === form.value.firstName)) {
-      alert("First Name is duplicated!")
-      isValid = false;
-    }
-  }
-  const checkLastNameDuplicate = () => {
-    if (customers.some(custom => custom.lastName === form.value.lastName)) {
-      alert("Last Name is duplicated!")
-      isValid = false;
-    }
-  }
-  const checkDateOfBirthDuplicate = () => {
-    if (customers.some(custom => custom.dateOfBirth === form.value.dateOfBirth)) {
-      alert("Date of Birth is duplicated!")
+  const checkDuplicates = () => {
+    if (customers.some(custom => custom.dateOfBirth.toLowerCase() === form.value.dateOfBirth.toLowerCase()) &&
+        customers.some(custom => custom.lastName.toLowerCase() === form.value.lastName.toLowerCase()) &&
+        customers.some(custom => custom.firstName.toLowerCase() === form.value.firstName.toLowerCase())) {
+      alert("Firstname, Lastname and Date of Birth are duplicated!")
       isValid = false;
     }
   }
@@ -101,23 +99,18 @@ const validateForm = () => {
       isValid = false;
     }
 
-    checkFirstNameDuplicate()
-    checkLastNameDuplicate()
-    checkDateOfBirthDuplicate()
+    checkDuplicates()
 
   } else {
-    if (email !== form.value.email && customer.email === form.value.email) {
+    if (email.toLowerCase() !== form.value.email.toLowerCase() && customer.email.toLowerCase() === form.value.email.toLowerCase()) {
       alert("Email is duplicated!")
       isValid = false;
     }
-    if (customer.firstName !== form.value.firstName) {
-      checkFirstNameDuplicate()
-    }
-    if (customer.lastName !== form.value.lastName) {
-      checkLastNameDuplicate()
-    }
-    if (customer.dateOfBirth !== form.value.dateOfBirth) {
-      checkDateOfBirthDuplicate()
+    if (customer.firstName.toLowerCase() !== form.value.firstName.toLowerCase() ||
+        customer.lastName.toLowerCase() !== form.value.lastName.toLowerCase() ||
+        customer.dateOfBirth.toLowerCase() !== form.value.dateOfBirth.toLowerCase()
+    ) {
+      checkDuplicates()
     }
   }
 

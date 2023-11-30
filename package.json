@@ -10,6 +10,7 @@
   "dependencies": {
     "autoprefixer": "^10.4.16",
     "core-js": "^3.8.3",
+    "libphonenumber-js": "^1.10.51",
     "postcss": "^8.4.31",
     "vue": "^3.2.13"
   },
